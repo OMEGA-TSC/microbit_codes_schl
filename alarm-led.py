@@ -51,6 +51,7 @@ while True:
         lastTled = running_time()
             
     if button_a.is_pressed():
+        sleep(1000)
         set_x, set_y, set_z = accelerometer.get_values()
         set = 1
         
@@ -62,6 +63,7 @@ while True:
 
     if pin_logo.is_touched():
         radio.send(enc.bin("reset"))
+        sleep(500)
         
     if set == 1:
         if (accelerometer.get_x() > (set_x + 50))  or (accelerometer.get_x() < (set_x - 50)):
