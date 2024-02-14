@@ -25,6 +25,7 @@ while True:
             set = 0
             alarm = 0
             music.stop()
+            pin0.write_digital(0)
             
     if alarm == 1 and running_time() >= (lastT + delayT):
         if beep == 0:
@@ -57,7 +58,7 @@ while True:
         set = 0
         alarm = 0
         music.stop()
-        display.off()
+        pin0.write_digital(0)
 
     if pin_logo.is_touched():
         radio.send(enc.bin("reset"))
