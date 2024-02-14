@@ -78,7 +78,10 @@ while True:
             encdata = "alarm"
             encdata = enc.bin(encdata)
             radio.send(encdata)
-            
+        elif microphone.sound_level() > 170:
+            encdata = "alarm"
+            encdata = enc.bin(encdata)
+            radio.send(encdata)
         else :
             encdata = "ok"
             encdata = enc.bin(encdata)
