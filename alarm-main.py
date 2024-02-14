@@ -4,8 +4,7 @@ import music
 import simplecipher
 enc = simplecipher.encrypt()
 dec = simplecipher.decrypt()
-pohyb = 0
-radio.config(channel=69, group=69, length=64)
+radio.config(channel=21, group=123, length=64)
 radio.on()
 set_x, set_y, set_z = 0, 0, 0
 set, alarm, beep = 0, 0, 0
@@ -73,5 +72,4 @@ while True:
             encdata = "ok"
             encdata = enc.bin(encdata)
             radio.send(encdata)
-            
         print(encdata)
