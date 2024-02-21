@@ -1,11 +1,12 @@
 from microbit import *
 import music
 
-cmdsstr = ['help', 'beep', 'println', 'digital_write', 'sys', 'disp_write']
+cmdsstr = ['help', 'beep', 'println', 'digital_write', 'sys', 'disp_write', 'stopwatch']
 flg_work = 0
 indexofcmd = 0
 pins = [pin0, pin1, pin2]
-
+stopwatch_vars = [0, 0]
+stopwatch_run = 0
 def help(args, argslen):
     if argslen == 1:
         print("available functions:")
@@ -36,23 +37,23 @@ def digital_write(args, argslen):
         if argslen == 3:
             pins[int(args[1])].write_digital(int(args[2]))
         else:
-            print("invalid input!")
+            print("invalid argument/s!")
             print("usage: digital_write pin (0-2) value (0-1)")  
     except:
-        print("invalid input!")
+        print("invalid argument/s!")
         print("usage: digital_write pin (0-2) value (0-1)")
         
 def sys(args, argslen):
     sys_args = ['uptime', 'info', 'reboot']
-    if argslen > 1 and args[1] == 'uptime':
+    if argslen > 1 and args[1] == sys_args[0]:
         print(str(round(running_time()/1000, 1)) + " s")
-    elif argslen > 1 and args[1] == 'info':
+    elif argslen > 1 and args[1] == sys_args[1]:
         print("m_os vesion: 1.0")
-    elif argslen > 1 and args[1] == 'reboot':
+    elif argslen > 1 and args[1] == sys_args[2]:
         print("rebooting...")
         reset()
     else:
-        print("invalid input!")
+        print("invalid argument/s!")
         print("usage: sys <argument>")
         print('available arguments for "sys":')
         for arg in sys_args:
@@ -72,10 +73,53 @@ def disp_write(args, argslen):
                 res += " "
             display.show(res)
         else:
-            print("invalid input!")
+            print("invalid argument/s!")
             print("usage: disp_write <scroll/show> <text>")
-                  
-cmds = [help, beep, println, digital_write, sys, disp_write]
+
+def stopwatch(args, argslen):
+    stopwatch_args = ['start', 'stop', 'show', 'reset']
+    global stopwatch_run
+    if argslen > 1 and args[1] == stopwatch_args[0]:
+        if stopwatch_run == 0:
+            stopwatch_run = 1
+            stopwatch_vars[0] = running_time()
+        else:
+            print("cannot start stopwatch when running!")
+    elif argslen > 1 and args[1] == stopwatch_args[1]:
+        if stopwatch_run == 1:
+            stopwatch_run = 0
+            stopwatch_vars[1] = running_time()
+        else:
+            print("cannot stop stopwatch when not running!")
+    elif argslen > 1 and args[1] == stopwatch_args[2]:
+        if stopwatch_run == 1:
+            time_ms = running_time() - stopwatch_vars[0]
+            ms = time_ms % 1000
+            sec = int((time_ms - ms) / 1000) % 60
+            min = int(((time_ms -ms) / 1000) / 60) % 60
+            print("elapsed time: " + str(min) + ":" + str(sec) + ":" + str(ms))
+        else:
+            time_ms = stopwatch_vars[1] - stopwatch_vars[0]
+            ms = time_ms % 1000
+            sec = int((time_ms - ms) / 1000) % 60
+            min = int(((time_ms -ms) / 1000) / 60) % 60
+            print("stopwatch time: " + str(min) + ":" + str(sec) + ":" + str(ms))
+    if argslen > 1 and args[1] == stopwatch_args[3]:
+        if stopwatch_run == 0:
+            stopwatch_vars[0] = 0
+            stopwatch_vars[1] = 0
+        else:
+            print("cannot reset stopwatch when running!")
+    else:
+        print("invalid argument/s!")
+        print("usage: stopwatch <argument>")
+        print('available arguments for "stopwatch":')
+        for arg in stopwatch_args:
+            print(arg)
+        
+        
+        
+cmds = [help, beep, println, digital_write, sys, disp_write, stopwatch]
         
 while True:
     cmd = input("@microbit>")
