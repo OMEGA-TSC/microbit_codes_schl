@@ -7,6 +7,8 @@ indexofcmd = 0
 pins = [pin0, pin1, pin2]
 stopwatch_vars = [0, 0]
 stopwatch_run = 0
+default_machine_name = "microbit"
+machine_name = default_machine_name
 def help(args, argslen):
     if argslen == 1:
         print("available functions:")
@@ -44,7 +46,9 @@ def digital_write(args, argslen):
         print("usage: digital_write pin (0-2) value (0-1)")
         
 def sys(args, argslen):
-    sys_args = ['uptime', 'info', 'reboot']
+    global machine_name
+    sys_args = ['uptime', 'info', 'reboot', 'name']
+    name_args = ['set', 'default']
     if argslen > 1 and args[1] == sys_args[0]:
         print(str(round(running_time()/1000, 1)) + " s")
     elif argslen > 1 and args[1] == sys_args[1]:
@@ -52,6 +56,17 @@ def sys(args, argslen):
     elif argslen > 1 and args[1] == sys_args[2]:
         print("rebooting...")
         reset()
+    elif argslen > 1 and args[1] == sys_args[3]:
+        if argslen > 3 and args[2] == name_args[0]:
+            if len(args[2]) < 33:
+                machine_name = args[3]
+            else:
+                print("name too long! max length of name is 32 characters")
+        elif argslen > 2 and args[2] == name_args[1]:
+            machine_name = default_machine_name
+        else:
+            print("invalid argument/s!")
+            print("usage: sys name set <name> or sys name default")
     else:
         print("invalid argument/s!")
         print("usage: sys <argument>")
@@ -116,13 +131,14 @@ def stopwatch(args, argslen):
         print('available arguments for "stopwatch":')
         for arg in stopwatch_args:
             print(arg)
-        
-        
-        
+       
+#def timer(args, argslen):
+#    pass
+    
 cmds = [help, beep, println, digital_write, sys, disp_write, stopwatch]
         
 while True:
-    cmd = input("@microbit>")
+    cmd = input("@" + machine_name + ">")
     args = cmd.split(" ")
     argslen = len(args)
     try:
