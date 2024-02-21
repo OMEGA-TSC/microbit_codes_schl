@@ -119,7 +119,7 @@ def stopwatch(args, argslen):
             sec = int((time_ms - ms) / 1000) % 60
             min = int(((time_ms -ms) / 1000) / 60) % 60
             print("stopwatch time: " + str(min) + ":" + str(sec) + ":" + str(ms))
-    if argslen > 1 and args[1] == stopwatch_args[3]:
+    elif argslen > 1 and args[1] == stopwatch_args[3]:
         if stopwatch_run == 0:
             stopwatch_vars[0] = 0
             stopwatch_vars[1] = 0
