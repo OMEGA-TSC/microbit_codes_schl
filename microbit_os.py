@@ -88,5 +88,4 @@ while True:
         print("command doesn't exist use help for more info")
     if flg_work == 1:
         cmds[indexofcmd](args, argslen)
-        flg_work = 0
-        
+        flg_work = 0   
