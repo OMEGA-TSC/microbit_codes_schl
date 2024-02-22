@@ -34,17 +34,6 @@ def println(args, argslen):
         res += str(args[i])
         res += " "
     print(res)
-    
-def digital_write(args, argslen):
-    try:
-        if argslen == 3:
-            pins[int(args[1])].write_digital(int(args[2]))
-        else:
-            print("invalid argument/s!")
-            print("usage: digital_write pin (0-2) value (0-1)")  
-    except:
-        print("invalid argument/s!")
-        print("usage: digital_write pin (0-2) value (0-1)")
         
 def sys(args, argslen):
     global machine_name
