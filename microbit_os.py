@@ -1,7 +1,7 @@
 from microbit import *
 import music
 
-cmdsstr = ['help', 'beep', 'println', 'digital_write', 'sys', 'disp_write', 'stopwatch']
+cmdsstr = ['help', 'beep', 'println', 'sys', 'disp_write', 'stopwatch', 'hw']
 flg_work = 0
 indexofcmd = 0
 pins = [pin0, pin1, pin2]
@@ -9,6 +9,7 @@ stopwatch_vars = [0, 0]
 stopwatch_run = 0
 default_machine_name = "microbit"
 machine_name = default_machine_name
+os_version = "0.2.0"
 def help(args, argslen):
     if argslen == 1:
         print("available functions:")
@@ -24,9 +25,9 @@ def beep(args, argslen):
         elif argslen == 3:
             music.pitch(int(args[1]), int(args[2]))
     except:
-        print("invalid input!")
+        print("invalid argument/s!")
         print("usage: beep *frequency (int) *duratioon (int)  (* = optional argument)")
-
+        
 def println(args, argslen):
     res = ''
     for i in range(1, argslen):
@@ -52,7 +53,7 @@ def sys(args, argslen):
     if argslen > 1 and args[1] == sys_args[0]:
         print(str(round(running_time()/1000, 1)) + " s")
     elif argslen > 1 and args[1] == sys_args[1]:
-        print("m_os vesion: 1.0")
+        print("m_os vesion: " + os_version)
     elif argslen > 1 and args[1] == sys_args[2]:
         print("rebooting...")
         reset()
@@ -132,10 +133,36 @@ def stopwatch(args, argslen):
         for arg in stopwatch_args:
             print(arg)
        
-#def timer(args, argslen):
-#    pass
-    
-cmds = [help, beep, println, digital_write, sys, disp_write, stopwatch]
+def hw(args, argslen):
+    hw_args = ['digital']
+    digital_args = ['write', 'read']
+    if argslen > 3 and args[1] == hw_args[0]:
+        if argslen > 4 and digital_args[0] == args[2]:
+            try:
+                pins[int(args[3])].write_digital(int(args[4]))
+            except:
+                print("invalid argument/s!")
+                print("usage: hw digital write <pin> (0-2) <value> (0-1)")
+        elif argslen > 3 and digital_args[1] == args[2]:
+            try:
+                print(pins[int(args[3])].read_digital())
+            except:
+                print("invalid argument/s!")
+                print("usage: hw digital read <pin> (0-2)")
+        else:
+            print("invalid argument/s!")
+            print("usage: digital write/read <argument/s>")
+            print('available arguments for "digital":')
+            for arg in hw_args:
+                print(arg)     
+    else:
+        print("invalid argument/s!")
+        print("usage: hw <argument>")
+        print('available arguments for "hw":')
+        for arg in hw_args:
+            print(arg)
+
+cmds = [help, beep, println, sys, disp_write, stopwatch, hw]
         
 while True:
     cmd = input("@" + machine_name + ">")
