@@ -1,7 +1,7 @@
 from microbit import *
 import music
 
-cmdsstr = ['help', 'beep', 'println', 'sys', 'disp_write', 'stopwatch', 'hw']
+cmdsstr = ['help', 'beep', 'println', 'sys', 'disp_write', 'stopwatch', 'hw', 'sudo', "execute"]
 flg_work = 0
 indexofcmd = 0
 pins = [pin0, pin1, pin2]
@@ -9,7 +9,10 @@ stopwatch_vars = [0, 0]
 stopwatch_run = 0
 default_machine_name = "microbit"
 machine_name = default_machine_name
+mode = "@"
 os_version = "0.2.0"
+password = "microbit"
+files = []
 def help(args, argslen):
     if argslen == 1:
         print("available functions:")
@@ -150,11 +153,58 @@ def hw(args, argslen):
         print('available arguments for "hw":')
         for arg in hw_args:
             print(arg)
+def sudo(args, argslen):
+    global mode
+    sudo_args = ["su", "exit"]
+    if argslen > 2 and args[1] == sudo_args[0]:
+        if mode == "@":
+            if args[2] == password:
+                mode = "#"
+            else:
+                print("wrong pass for root!")
+        else:
+            print("cannot root when already rooted!")
+    elif argslen > 1 and args[1] == sudo_args[1]:
+        if mode == "#":
+            mode = "@"
+        else:
+            print("cannot disable root when not rooted!")
+    else:
+        print("invalid argument/s!")
+        print("usage: sudo su <password> / sudo exit")
+def execute(args, argslen):
+    global files
+    try:
+        if argslen > 1:
+            if mode == "#":
+                files.index(args[1])
+                module = __import__(args[1])
+                func = getattr(module, 'main')
+                func()
 
-cmds = [help, beep, println, sys, disp_write, stopwatch, hw]
+            else:
+                print("not rooted!")
+        else:
+            print("invalid argument/s!")
+            print("usage: execute <file without .py extension to run>")
+    except:
+        if argslen > 1:
+            if mode == "#":
+                try:
+                    files.append(args[1])
+                    __import__(args[1])
+                except:
+                    print("file does not exist")
+            else:
+                print("not rooted!")
+        else:
+            print("invalid argument/s!")
+            print("usage: execute <file without .py extension to run>")
+     
+cmds = [help, beep, println, sys, disp_write, stopwatch, hw, sudo, execute]
         
 while True:
-    cmd = input("@" + machine_name + ">")
+    cmd = input("(" + mode + ")" + machine_name + ">")
     args = cmd.split(" ")
     argslen = len(args)
     try:
