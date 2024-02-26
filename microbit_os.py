@@ -10,7 +10,7 @@ stopwatch_run = 0
 default_machine_name = "microbit"
 machine_name = default_machine_name
 mode = "@"
-os_version = "0.2.0"
+os_version = "0.3.0"
 password = "microbit"
 files = []
 def help(args, argslen):
